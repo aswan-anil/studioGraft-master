@@ -1,0 +1,14 @@
+[Unit]
+Description=StudioGraft Next.js Dashboard
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/grafito/studioGraft-master
+ExecStart=/usr/bin/npm run start
+Restart=always
+User=grafito
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target
