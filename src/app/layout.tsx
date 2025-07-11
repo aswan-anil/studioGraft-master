@@ -7,11 +7,42 @@ export const metadata: Metadata = {
   description: 'Dashboard for the Grafito robotic grafting machine.',
 };
 
+import { useEffect } from "react";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  useEffect(() => {
+    // Disable right-click
+    const disableContextMenu = (e: MouseEvent) => e.preventDefault();
+    document.addEventListener("contextmenu", disableContextMenu);
+
+    // Block common shortcuts
+    const blockKeys = (e: KeyboardEvent) => {
+      // Block F12, Ctrl+Shift+I/J/C/U, Ctrl+R, Ctrl+T, Ctrl+W, Alt+F4, F5, etc.
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["I", "J", "C", "U"].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && ["R", "T", "W"].includes(e.key.toUpperCase())) ||
+        (e.key === "F5") ||
+        (e.altKey && e.key === "F4")
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+    document.addEventListener("keydown", blockKeys, true);
+
+    // Clean up on unmount
+    return () => {
+      document.removeEventListener("contextmenu", disableContextMenu);
+      document.removeEventListener("keydown", blockKeys, true);
+    };
+  }, []);
+
   return (
     <html lang="en" className="dark">
       <head>
